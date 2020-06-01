@@ -53,6 +53,11 @@ export default {
     },
     userLikesStr() {
       let str = this.data.likes.includes(this.currentUID) ? "You" : "";
+
+      if (this.data.likes.length === 1) {
+        return str.length > 0 ? str : this.userLikes[0];
+      }
+
       this.userLikes.forEach((name, i) => {
         const separator = i === this.userLikes.length - 1 ? " and " : ", ";
         str += separator + name;
