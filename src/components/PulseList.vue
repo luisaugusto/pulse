@@ -2,7 +2,7 @@
   <v-container>
     <v-row>
       <v-list class="flex-grow-1" v-if="pulses.length > 0">
-        <div v-for="(pulse, index) in pulses" :key="pulse.id">
+        <div v-for="(pulse, index) in pulses" :key="index">
           <v-subheader
             v-if="
               index === 0 ||
@@ -41,8 +41,7 @@ export default {
   },
   computed: {
     pulses() {
-      const pulses = this.$store.state.pulses;
-      return pulses.sort((a, b) => b.time - a.time);
+      return this.$store.state.pulses;
     }
   },
   methods: {

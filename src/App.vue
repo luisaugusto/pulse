@@ -76,18 +76,28 @@ export default {
           ];
 
           if (validEmails.includes(user.email)) {
-            this.$store.dispatch("logIn", {
-              name: user.displayName,
-              image: user.photoURL,
-              email: user.email,
-              uid: user.uid
-            });
+            this.dispatchUser(user);
           } else {
             this.accessAlert = true;
             firebaseApp.auth().signOut();
           }
         });
+    },
+    dispatchUser(user) {
+      this.$store.dispatch("logIn", {
+        name: user.displayName,
+        image: user.photoURL,
+        email: user.email,
+        uid: user.uid
+      });
     }
+  },
+  mounted() {
+    firebaseApp.auth().onAuthStateChanged(user => {
+      if (user) {
+        this.dispatchUser(user);
+      }
+    });
   }
 };
 </script>

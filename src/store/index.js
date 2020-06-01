@@ -87,13 +87,22 @@ export default new Vuex.Store({
         );
     }),
     bindPulses: firestoreAction(({ bindFirestoreRef }) => {
-      return bindFirestoreRef("pulses", db.collection("pulses"));
+      // return the promise returned by `bindFirestoreRef`
+      return bindFirestoreRef(
+        "pulses",
+        db.collection("pulses").orderBy("time", "desc")
+      );
     }),
-    like(context, data) {
-      return db
-        .collection("pulses")
+    like: firestoreAction((context, data) => {
+      // return the promise returned by `bindFirestoreRef`
+      console.log(data);
+      db.collection("pulses")
+        .doc(data.pulse)
+        .get()
+        .then(snapshot => console.log(snapshot.data()));
+      db.collection("pulses")
         .doc(data.pulse)
         .update({ likes: data.likes });
-    }
+    })
   }
 });

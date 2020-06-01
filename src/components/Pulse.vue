@@ -1,11 +1,11 @@
 <template>
-  <v-list-item v-if="data && user">
+  <v-list-item v-if="data && author">
     <v-list-item-avatar>
-      <v-img :src="user.image"></v-img>
+      <v-img :src="author.image"></v-img>
     </v-list-item-avatar>
 
     <v-list-item-content>
-      <v-list-item-title>{{ user.name }}</v-list-item-title>
+      <v-list-item-title>{{ author.name }}</v-list-item-title>
       <v-list-item-subtitle
         >is {{ actions[data.action].text }}
         {{ data.message }}</v-list-item-subtitle
@@ -16,16 +16,18 @@
       <v-list-item-action-text>{{
         formatTime(data.time.seconds * 1000)
       }}</v-list-item-action-text>
-      <!--      <v-tooltip bottom>-->
-      <!--        <template v-slot:activator="{ on }">-->
-      <!--          <v-btn icon @click="like" v-on="on"-->
-      <!--            ><v-icon small :color="data.likes.includes(user.uid) ? 'blue' : ''"-->
-      <!--              >thumb_up</v-icon-->
-      <!--            ></v-btn-->
-      <!--          >-->
-      <!--        </template>-->
-      <!--        <span>Margarette acknowledged this</span>-->
-      <!--      </v-tooltip>-->
+      <v-tooltip bottom :disabled="data.likes.length === 0">
+        <template v-slot:activator="{ on }">
+          <v-btn icon @click="like" v-on="on"
+            ><v-icon
+              small
+              :color="data.likes.includes(currentUID) ? 'blue' : ''"
+              >thumb_up</v-icon
+            ></v-btn
+          >
+        </template>
+        <span>{{ userLikesStr }} acknowledged this</span>
+      </v-tooltip>
     </v-list-item-action>
   </v-list-item>
 </template>
@@ -39,19 +41,31 @@ export default {
     }
   },
   data: () => ({
-    user: null
+    author: null,
+    userLikes: []
   }),
   computed: {
+    currentUID() {
+      return this.$store.state.user.data.uid;
+    },
     actions() {
       return this.$store.getters.sortedActions;
+    },
+    userLikesStr() {
+      let str = this.data.likes.includes(this.currentUID) ? "You" : "";
+      this.userLikes.forEach((name, i) => {
+        const separator = i === this.userLikes.length - 1 ? " and " : ", ";
+        str += separator + name;
+      });
+      return str;
     }
   },
   methods: {
     like() {
-      const liked = this.data.likes.includes(this.user.uid);
+      const liked = this.data.likes.includes(this.author.uid);
       const likes = liked
-        ? this.data.likes.filter(like => like != this.user.uid)
-        : [...this.data.likes, this.user.uid];
+        ? this.data.likes.filter(like => like !== this.author.uid)
+        : [...this.data.likes, this.author.uid];
       this.$store.dispatch("like", {
         pulse: this.data.id,
         likes
@@ -70,7 +84,15 @@ export default {
   mounted() {
     this.$store
       .dispatch("getUser", this.data.user)
-      .then(user => (this.user = user));
+      .then(user => (this.author = user));
+
+    this.data.likes.forEach(like => {
+      if (like === this.currentUID) return;
+
+      this.$store
+        .dispatch("getUser", like)
+        .then(user => this.userLikes.push(user.name));
+    });
   }
 };
 </script>
