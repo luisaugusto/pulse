@@ -103,13 +103,7 @@ export default {
     },
     dispatchUser(user) {
       this.checkingLoginStatus = false;
-
-      this.$store.dispatch("logIn", {
-        name: user.displayName,
-        image: user.photoURL,
-        email: user.email,
-        uid: user.uid
-      });
+      this.$store.dispatch("logIn", user);
     }
   },
   mounted() {
@@ -120,6 +114,9 @@ export default {
         this.checkingLoginStatus = false;
       }
     });
+  },
+  created() {
+    this.$store.dispatch("bindActions");
   }
 };
 </script>

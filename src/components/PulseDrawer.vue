@@ -21,8 +21,8 @@
                 <v-autocomplete
                   append-icon="arrow_drop_down"
                   :items="actions"
-                  item-text="text"
-                  item-value="val"
+                  item-text="name"
+                  item-value="id"
                   label="What are you up to?"
                   v-model="formData.action"
                   return-object
@@ -33,7 +33,7 @@
                 <v-text-field
                   :disabled="
                     formData.action &&
-                      formData.action.text === 'sending a pulse'
+                      formData.action.name === 'sending a pulse'
                   "
                   label="Message"
                   counter="30"
@@ -70,7 +70,7 @@ export default {
   }),
   computed: {
     actions() {
-      return this.$store.getters.sortedActions;
+      return this.$store.state.actions;
     },
     user() {
       return this.$store.state.user;
@@ -83,7 +83,7 @@ export default {
       this.submitLoading = true;
       this.$store
         .dispatch("createPulse", {
-          action: this.formData.action.val,
+          action: this.formData.action.id,
           message: this.formData.message || ""
         })
         .then(() => {

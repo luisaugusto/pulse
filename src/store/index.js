@@ -2,6 +2,8 @@ import Vue from "vue";
 import Vuex from "vuex";
 import { vuexfireMutations, firestoreAction } from "vuexfire";
 import { db } from "../firebase";
+import { firestore } from "firebase/app";
+import "firebase/firestore";
 
 Vue.use(Vuex);
 
@@ -11,30 +13,8 @@ export default new Vuex.Store({
       loggedIn: false,
       data: null
     },
-    actions: [
-      "eating",
-      "at work",
-      "at home",
-      "awake",
-      "going to bed",
-      "exercising",
-      "playing",
-      "driving",
-      "shopping",
-      "sending a pulse",
-      "working",
-      "watching",
-      "reading"
-    ],
+    actions: [],
     pulses: []
-  },
-  getters: {
-    sortedActions: state => {
-      return state.actions.sort().map((action, index) => ({
-        text: action,
-        val: index
-      }));
-    }
   },
   mutations: {
     ...vuexfireMutations,
@@ -49,55 +29,69 @@ export default new Vuex.Store({
   },
   actions: {
     logIn({ commit }, user) {
+      const data = {
+        name: user.displayName,
+        email: user.email,
+        image: user.photoURL,
+        uid: user.uid
+      };
       db.collection("users")
         .doc(user.uid)
-        .set(user)
+        .set(data)
         .then(() => {
-          commit("setUser", user);
+          commit("setUser", data);
         });
     },
     logOut({ commit }) {
       commit("removeUser");
     },
-    async getUser(context, uid) {
-      const user = await db
-        .collection("users")
-        .doc(uid)
-        .get()
-        .then(snapshot => {
-          return snapshot.data();
-        });
-      return user;
-    },
     createPulse: firestoreAction(({ state }, data) => {
       const pulse = {
-        user: state.user.data.uid,
-        action: data.action,
+        author: db.collection("users").doc(state.user.data.uid),
+        action: db.collection("actions").doc(data.action),
         message: data.message,
-        likes: [],
-        time: new Date()
+        time: new Date(),
+        reactions: []
       };
-      // return the promise so we can await the write
-      return db
-        .collection("pulses")
-        .add(pulse)
-        .then(data =>
-          db
-            .collection("pulses")
-            .doc(data.id)
-            .update({ id: data.id })
-        );
+
+      return db.collection("pulses").add(pulse);
     }),
     bindPulses: firestoreAction(({ bindFirestoreRef }) => {
       return bindFirestoreRef(
         "pulses",
-        db.collection("pulses").orderBy("time", "desc")
+        db.collection("pulses").orderBy("time", "desc"),
+        {
+          serialize: snapshot => ({
+            ...snapshot.data(),
+            id: snapshot.id
+          })
+        }
       );
     }),
-    like: firestoreAction((context, data) => {
-      db.collection("pulses")
-        .doc(data.pulse)
-        .update({ likes: data.likes });
+    bindActions: firestoreAction(({ bindFirestoreRef }) => {
+      return bindFirestoreRef(
+        "actions",
+        db.collection("actions").orderBy("name", "asc"),
+        {
+          serialize: snapshot => ({
+            name: snapshot.data().name,
+            id: snapshot.id
+          })
+        }
+      );
+    }),
+    toggleReaction: firestoreAction(({ state }, data) => {
+      const user = db.collection("users").doc(state.user.data.uid);
+      const pulse = db.collection("pulses").doc(data.pulse);
+      if (data.hasReaction) {
+        return pulse.update({
+          reactions: firestore.FieldValue.arrayRemove(user)
+        });
+      } else {
+        return pulse.update({
+          reactions: firestore.FieldValue.arrayUnion(user)
+        });
+      }
     })
   }
 });
