@@ -47,7 +47,8 @@ import PulseList from "./components/PulseList";
 import PulseDrawer from "./components/PulseDrawer";
 import HeaderSidebar from "./components/HeaderSidebar";
 import { firebaseApp } from "./firebase";
-import { auth } from "firebase";
+import { auth } from "firebase/app";
+import "firebase/auth";
 
 export default {
   components: {

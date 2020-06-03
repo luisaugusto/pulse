@@ -6,7 +6,7 @@
 
     <v-list-item-content>
       <v-list-item-title>{{ author.name }}</v-list-item-title>
-      <v-list-item-subtitle
+      <v-list-item-subtitle v-if="actions[data.action]"
         >is {{ actions[data.action].text }}
         {{ data.message }}</v-list-item-subtitle
       >
@@ -18,13 +18,16 @@
       }}</v-list-item-action-text>
       <v-tooltip bottom :disabled="data.likes.length === 0">
         <template v-slot:activator="{ on }">
-          <v-btn icon @click="like" v-on="on"
-            ><v-icon
-              small
-              :color="data.likes.includes(currentUID) ? 'blue' : ''"
-              >thumb_up</v-icon
-            ></v-btn
-          >
+          <v-chip @click="like" v-on="on" small class="mt-2">
+            <v-avatar left>
+              <v-icon
+                small
+                :color="data.likes.includes(currentUID) ? 'blue' : ''"
+                >thumb_up</v-icon
+              >
+            </v-avatar>
+            {{ data.likes.length }}
+          </v-chip>
         </template>
         <span>{{ userLikesStr }} acknowledged this</span>
       </v-tooltip>
@@ -65,12 +68,20 @@ export default {
       return str;
     }
   },
+  watch: {
+    data() {
+      this.getAuthor();
+      this.getLikes();
+    }
+  },
   methods: {
     like() {
-      const liked = this.data.likes.includes(this.author.uid);
+      const liked = this.data.likes.includes(this.currentUID);
+
       const likes = liked
-        ? this.data.likes.filter(like => like !== this.author.uid)
-        : [...this.data.likes, this.author.uid];
+        ? this.data.likes.filter(like => like !== this.currentUID)
+        : [...this.data.likes, this.currentUID];
+
       this.$store.dispatch("like", {
         pulse: this.data.id,
         likes
@@ -84,20 +95,25 @@ export default {
       return `${hours > 12 ? hours - 12 : hours}:${minutes}${
         hours >= 12 ? "pm" : "am"
       }`;
+    },
+    getAuthor() {
+      this.$store
+        .dispatch("getUser", this.data.user)
+        .then(user => (this.author = user));
+    },
+    getLikes() {
+      this.data.likes.forEach(like => {
+        if (like === this.currentUID) return;
+
+        this.$store
+          .dispatch("getUser", like)
+          .then(user => this.userLikes.push(user.name.split(" ")[0]));
+      });
     }
   },
   mounted() {
-    this.$store
-      .dispatch("getUser", this.data.user)
-      .then(user => (this.author = user));
-
-    this.data.likes.forEach(like => {
-      if (like === this.currentUID) return;
-
-      this.$store
-        .dispatch("getUser", like)
-        .then(user => this.userLikes.push(user.name));
-    });
+    this.getAuthor();
+    this.getLikes();
   }
 };
 </script>

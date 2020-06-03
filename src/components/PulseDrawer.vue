@@ -78,11 +78,13 @@ export default {
   },
   methods: {
     createPulse() {
+      if (this.submitLoading) return;
+
       this.submitLoading = true;
       this.$store
         .dispatch("createPulse", {
           action: this.formData.action.val,
-          message: this.formData.message
+          message: this.formData.message || ""
         })
         .then(() => {
           this.submitLoading = false;
