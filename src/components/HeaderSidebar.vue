@@ -46,7 +46,10 @@
       </v-list>
       <template v-slot:append>
         <v-list dense>
-          <v-list-item href="#/" target="_blank">
+          <v-list-item
+            href="https://github.com/luisaugusto/pulse"
+            target="_blank"
+          >
             <v-list-item-icon>
               <v-icon>developer_mode</v-icon>
             </v-list-item-icon>
