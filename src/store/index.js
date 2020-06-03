@@ -23,7 +23,8 @@ export default new Vuex.Store({
       "shopping",
       "sending a pulse",
       "working",
-      "watching"
+      "watching",
+      "reading"
     ],
     pulses: []
   },
