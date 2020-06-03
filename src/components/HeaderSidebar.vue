@@ -10,13 +10,7 @@
       <v-app-bar-nav-icon disabled v-if="user.loggedIn"> </v-app-bar-nav-icon>
     </v-app-bar>
 
-    <v-navigation-drawer
-      v-model="sidebar"
-      absolute
-      temporary
-      v-if="user.loggedIn"
-      style="height: 100vh;"
-    >
+    <v-navigation-drawer v-model="sidebar" fixed temporary v-if="user.loggedIn">
       <template v-slot:prepend>
         <v-list-item>
           <v-list-item-avatar>
