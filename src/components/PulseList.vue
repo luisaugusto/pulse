@@ -66,9 +66,6 @@ export default {
       const day = String(date.getDate()).padStart(2, "0");
       return `${month} ${day}, ${year}`;
     }
-  },
-  created() {
-    this.$store.dispatch("bindPulses");
   }
 };
 </script>

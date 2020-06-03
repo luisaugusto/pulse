@@ -114,9 +114,6 @@ export default {
         this.checkingLoginStatus = false;
       }
     });
-  },
-  created() {
-    this.$store.dispatch("bindActions");
   }
 };
 </script>

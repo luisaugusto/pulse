@@ -28,7 +28,7 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    logIn({ commit }, user) {
+    logIn({ commit, dispatch }, user) {
       const data = {
         name: user.displayName,
         email: user.email,
@@ -40,6 +40,8 @@ export default new Vuex.Store({
         .set(data)
         .then(() => {
           commit("setUser", data);
+          dispatch("bindActions");
+          dispatch("bindPulses");
         });
     },
     logOut({ commit }) {
