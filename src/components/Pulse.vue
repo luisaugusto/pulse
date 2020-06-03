@@ -76,7 +76,7 @@ export default {
       const hours = date.getHours();
       const minutes = String(date.getMinutes()).padStart(2, "0");
 
-      return `${hours > 12 ? hours - 12 : hours}:${minutes}${
+      return `${hours > 12 ? hours - 12 : hours === 0 ? 12 : hours}:${minutes}${
         hours >= 12 ? "pm" : "am"
       }`;
     }
