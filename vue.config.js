@@ -1,6 +1,10 @@
 module.exports = {
   transpileDependencies: ["vuetify"],
   pwa: {
+    // workboxPluginMode: "InjectManifest",
+    // workboxOptions: {
+    //   swSrc: "src/service-worker.js"
+    // },
     name: "Pulse",
     themeColor: "#212121",
     msTileColor: "#212121",
