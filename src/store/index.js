@@ -14,7 +14,8 @@ export default new Vuex.Store({
       data: null
     },
     actions: [],
-    pulses: []
+    pulses: [],
+    insufficientPerms: true
   },
   mutations: {
     ...vuexfireMutations,
@@ -25,6 +26,9 @@ export default new Vuex.Store({
     removeUser(state) {
       state.user.loggedIn = false;
       state.user.data = null;
+    },
+    changePerms(state, val) {
+      state.insufficientPerms = val;
     }
   },
   actions: {
@@ -35,14 +39,16 @@ export default new Vuex.Store({
         image: user.photoURL,
         uid: user.uid
       };
+      commit("setUser", data);
+
       db.collection("users")
         .doc(user.uid)
         .set(data)
         .then(() => {
-          commit("setUser", data);
           dispatch("bindActions");
           dispatch("bindPulses");
-        });
+        })
+        .catch(err => console.log("Error while creating user: " + err));
     },
     logOut({ commit }) {
       commit("removeUser");
@@ -56,9 +62,12 @@ export default new Vuex.Store({
         reactions: []
       };
 
-      return db.collection("pulses").add(pulse);
+      return db
+        .collection("pulses")
+        .add(pulse)
+        .catch(err => "Error while creating pulse: " + err);
     }),
-    bindPulses: firestoreAction(({ bindFirestoreRef }) => {
+    bindPulses: firestoreAction(({ commit, bindFirestoreRef }) => {
       return bindFirestoreRef(
         "pulses",
         db.collection("pulses").orderBy("time", "desc"),
@@ -68,7 +77,9 @@ export default new Vuex.Store({
             id: snapshot.id
           })
         }
-      );
+      )
+        .then(() => commit("changePerms", false))
+        .catch(err => console.error("Error while binding pulses: " + err));
     }),
     bindActions: firestoreAction(({ bindFirestoreRef }) => {
       return bindFirestoreRef(
@@ -80,19 +91,23 @@ export default new Vuex.Store({
             id: snapshot.id
           })
         }
-      );
+      ).catch(err => console.error("Error while binding actions: " + err));
     }),
     toggleReaction: firestoreAction(({ state }, data) => {
       const user = db.collection("users").doc(state.user.data.uid);
       const pulse = db.collection("pulses").doc(data.pulse);
       if (data.hasReaction) {
-        return pulse.update({
-          reactions: firestore.FieldValue.arrayRemove(user)
-        });
+        return pulse
+          .update({
+            reactions: firestore.FieldValue.arrayRemove(user)
+          })
+          .catch(err => console.log("Error while updating reactions: " + err));
       } else {
-        return pulse.update({
-          reactions: firestore.FieldValue.arrayUnion(user)
-        });
+        return pulse
+          .update({
+            reactions: firestore.FieldValue.arrayUnion(user)
+          })
+          .catch(err => console.log("Error while updating reactions: " + err));
       }
     })
   }

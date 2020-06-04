@@ -4,21 +4,6 @@
     <v-content>
       <PulseList v-if="loggedIn"></PulseList>
       <v-container v-if="!(checkingLoginStatus || loggedIn)" fill-height>
-        <v-dialog v-model="accessAlert" max-width="290">
-          <v-card>
-            <v-card-text class="text-center pb-0 pt-6">
-              <v-icon color="red" class="pb-3">error</v-icon>
-              <p>Insufficient access credentials.</p>
-            </v-card-text>
-
-            <v-card-actions class="pt-0">
-              <v-spacer></v-spacer>
-              <v-btn color="green darken-1" text @click="accessAlert = false">
-                Close
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
         <v-row>
           <v-col class="text-center">
             <v-btn dark color="red" @click="signIn">Sign-in with Google</v-btn>
@@ -43,7 +28,7 @@
         </v-card>
       </v-dialog>
     </v-content>
-    <PulseDrawer></PulseDrawer>
+    <PulseDrawer v-if="!insufficientPerms"></PulseDrawer>
   </v-app>
 </template>
 
@@ -54,6 +39,7 @@ import HeaderSidebar from "./components/HeaderSidebar";
 import { firebaseApp } from "./firebase";
 import { auth } from "firebase/app";
 import "firebase/auth";
+import { mapState } from "vuex";
 
 export default {
   components: {
@@ -62,13 +48,13 @@ export default {
     HeaderSidebar
   },
   data: () => ({
-    accessAlert: false,
     checkingLoginStatus: false
   }),
   computed: {
-    loggedIn() {
-      return this.$store.state.user.loggedIn;
-    }
+    ...mapState({
+      loggedIn: state => state.user.loggedIn
+    }),
+    ...mapState(["insufficientPerms"])
   },
   methods: {
     signIn() {
@@ -83,18 +69,7 @@ export default {
             .auth()
             .signInWithPopup(provider)
             .then(({ user }) => {
-              const validEmails = [
-                "luisbaugusto@gmail.com",
-                "anne17margarette@gmail.com"
-              ];
-
-              if (validEmails.includes(user.email)) {
-                this.dispatchUser(user);
-              } else {
-                this.accessAlert = true;
-                this.checkingLoginStatus = false;
-                firebaseApp.auth().signOut();
-              }
+              this.dispatchUser(user);
             })
             .catch(() => {
               this.checkingLoginStatus = false;

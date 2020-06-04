@@ -28,11 +28,12 @@
         </div>
       </v-list>
       <v-col v-else>
-        <v-alert type="warning" outlined class="text-center">
-          No pulses yet. Click the
-          <v-btn x-small color="red" dark fab><v-icon>add</v-icon></v-btn>
-          in the bottom right to add a pulse.
-        </v-alert>
+        <v-banner single-line>
+          <v-icon slot="icon" color="red" size="36">
+            report_problem
+          </v-icon>
+          Unable to access pulse data.
+        </v-banner>
       </v-col>
     </v-row>
   </v-container>
