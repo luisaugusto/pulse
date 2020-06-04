@@ -3,6 +3,13 @@
     <v-row>
       <v-list class="flex-grow-1" v-if="pulses.length > 0">
         <div v-for="(pulse, index) in pulses" :key="index">
+          <v-divider
+            v-if="
+              index > 0 &&
+                formatDate(pulse.time.seconds * 1000) ===
+                  formatDate(pulses[index - 1].time.seconds * 1000)
+            "
+          ></v-divider>
           <v-subheader
             v-if="
               index === 0 ||
@@ -18,7 +25,6 @@
             }}
           </v-subheader>
           <Pulse :data="pulse"></Pulse>
-          <v-divider></v-divider>
         </div>
       </v-list>
       <v-col v-else>
