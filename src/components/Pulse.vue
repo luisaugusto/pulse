@@ -1,5 +1,5 @@
 <template>
-  <v-list-item v-if="data">
+  <v-list-item v-if="data" :link="clickable">
     <v-list-item-avatar>
       <v-img :src="data.author.image"></v-img>
     </v-list-item-avatar>
@@ -17,7 +17,7 @@
       }}</v-list-item-action-text>
       <v-tooltip bottom :disabled="data.reactions.length === 0">
         <template v-slot:activator="{ on }">
-          <v-chip @click="toggleReaction" v-on="on" small class="mt-2">
+          <v-chip @click.stop="toggleReaction" v-on="on" small class="mt-2">
             <v-avatar left>
               <v-icon small :color="hasReaction ? 'blue' : ''">thumb_up</v-icon>
             </v-avatar>
@@ -31,11 +31,18 @@
 </template>
 
 <script>
+import timeFormatting from "../modules/timeFormatting";
+
 export default {
+  mixins: [timeFormatting],
   props: {
     data: {
       type: Object,
       default: null
+    },
+    clickable: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -70,15 +77,6 @@ export default {
         pulse: this.data.id,
         hasReaction: this.hasReaction
       });
-    },
-    formatTime(time) {
-      const date = new Date(time);
-      const hours = date.getHours();
-      const minutes = String(date.getMinutes()).padStart(2, "0");
-
-      return `${hours > 12 ? hours - 12 : hours === 0 ? 12 : hours}:${minutes}${
-        hours >= 12 ? "pm" : "am"
-      }`;
     }
   }
 };

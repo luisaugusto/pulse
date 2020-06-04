@@ -109,6 +109,13 @@ export default new Vuex.Store({
           })
           .catch(err => console.log("Error while updating reactions: " + err));
       }
+    }),
+    deletePulse: firestoreAction((context, pulse) => {
+      return db
+        .collection("pulses")
+        .doc(pulse)
+        .delete()
+        .catch(err => console.log("Error while deleting pulse: " + err));
     })
   }
 });
