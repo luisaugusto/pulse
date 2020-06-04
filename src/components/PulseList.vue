@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <v-row>
-      <v-list class="flex-grow-1" v-if="pulses.length > 0">
+      <v-list class="flex-grow-1" v-if="pulses.length > 0" color="transparent">
         <div v-for="(pulse, index) in pulses" :key="index">
           <v-divider
             v-if="

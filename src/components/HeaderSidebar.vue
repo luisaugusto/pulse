@@ -1,6 +1,6 @@
 <template>
   <div class="header-sidebar">
-    <v-app-bar app color="primary" dark>
+    <v-app-bar app :color="darkMode ? 'teal' : 'primary'" dark>
       <v-app-bar-nav-icon @click.stop="sidebar = !sidebar" v-if="user.loggedIn">
         <v-icon>menu</v-icon>
       </v-app-bar-nav-icon>
@@ -28,6 +28,20 @@
       </template>
 
       <v-list dense>
+        <v-list-item class="d-flex align-center">
+          <v-list-item-content>
+            <v-list-item-title>Dark Mode</v-list-item-title>
+          </v-list-item-content>
+
+          <v-list-item-avatar class="overflow-visible">
+            <v-switch
+              color="teal"
+              v-model="darkModeToggle"
+              @change="updateDarkMode"
+            ></v-switch>
+          </v-list-item-avatar>
+        </v-list-item>
+
         <v-list-item link @click="logOut">
           <v-list-item-content>
             <v-list-item-title>Sign Out</v-list-item-title>
@@ -50,7 +64,7 @@
             <v-spacer></v-spacer>
             <v-list-item-content>
               <v-list-item-title class="text-right">
-                <code>v1.1.3</code>
+                <code>v1.1.4</code>
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
@@ -65,14 +79,22 @@ import { firebaseApp } from "../firebase";
 
 export default {
   data: () => ({
-    sidebar: null
+    sidebar: null,
+    darkModeToggle: false
   }),
   computed: {
     user() {
       return this.$store.state.user;
+    },
+    darkMode() {
+      return this.$vuetify.theme.dark;
     }
   },
   methods: {
+    updateDarkMode() {
+      localStorage.setItem("darkMode", this.darkModeToggle);
+      this.$vuetify.theme.dark = this.darkModeToggle;
+    },
     logOut() {
       this.sidebar = null;
 
@@ -83,6 +105,9 @@ export default {
           this.$store.dispatch("logOut");
         });
     }
+  },
+  mounted() {
+    this.darkModeToggle = localStorage.getItem("darkMode") === "true";
   }
 };
 </script>

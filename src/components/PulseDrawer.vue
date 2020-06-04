@@ -6,7 +6,7 @@
       fab
       bottom
       right
-      color="red"
+      :color="darkMode ? 'teal' : 'red'"
       v-if="user.loggedIn"
       @click.stop="open = !open"
     >
@@ -19,6 +19,7 @@
             <v-row class="align-center">
               <v-col cols="12" md="">
                 <v-autocomplete
+                  :color="darkMode ? 'teal' : 'blue'"
                   append-icon="arrow_drop_down"
                   :items="actions"
                   item-text="name"
@@ -31,6 +32,7 @@
               </v-col>
               <v-col cols="12" md="">
                 <v-text-field
+                  :color="darkMode ? 'teal' : 'blue'"
                   :disabled="
                     formData.action &&
                       formData.action.name === 'sending a pulse'
@@ -42,7 +44,7 @@
               </v-col>
               <v-col md="auto" class="text-right">
                 <v-btn
-                  color="red"
+                  :color="darkMode ? 'teal' : 'red'"
                   :dark="!!formData.action"
                   :loading="submitLoading"
                   @click="createPulse"
@@ -69,6 +71,9 @@ export default {
     }
   }),
   computed: {
+    darkMode() {
+      return this.$vuetify.theme.dark;
+    },
     actions() {
       return this.$store.state.actions;
     },
