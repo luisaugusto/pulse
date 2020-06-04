@@ -22,12 +22,7 @@
                     formatDate(pulses[index - 1].time.seconds * 1000)
               "
             >
-              {{
-                formatDate(new Date().getTime()) ===
-                formatDate(pulse.time.seconds * 1000)
-                  ? "Today"
-                  : formatDate(pulse.time.seconds * 1000)
-              }}
+              {{ getDateText(pulse.time.seconds) }}
             </v-subheader>
             <div @click="openPulseOptions(pulse)">
               <Pulse :data="pulse" :clickable="clickable(pulse)"></Pulse>
@@ -134,6 +129,21 @@ export default {
     }
   },
   methods: {
+    getDateText(time) {
+      const currentDate = new Date().setHours(0, 0, 0, 0);
+      const publishedDate = new Date(time * 1000).setHours(0, 0, 0, 0);
+      const day = 24 * 60 * 60 * 1000;
+
+      if (currentDate === publishedDate) {
+        return "Today";
+      }
+
+      if (publishedDate + day === currentDate) {
+        return "Yesterday";
+      }
+
+      return this.formatDate(publishedDate);
+    },
     deletePulse() {
       this.deleteLoading = true;
       this.$store.dispatch("deletePulse", this.activePulse.id).then(() => {
