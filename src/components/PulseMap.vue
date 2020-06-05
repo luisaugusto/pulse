@@ -61,6 +61,8 @@ export default {
     },
     setupMap() {
       this.$refs.map.innerHTML = "";
+      if (!this.coords) return;
+
       const lngLat = [this.coords.longitude, this.coords.latitude];
 
       setTimeout(() => {
