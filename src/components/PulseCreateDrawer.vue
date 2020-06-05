@@ -42,7 +42,29 @@
                   v-model="formData.message"
                 ></v-text-field>
               </v-col>
-              <v-col md="auto" class="text-right">
+            </v-row>
+            <v-row class="justify-end">
+              <v-col class="d-flex align-center">
+                <v-switch
+                  label="Include Geolocation"
+                  v-model="includeGeo"
+                  :loading="checkingGeo"
+                  @change="checkGeolocation"
+                  :color="darkMode ? 'teal' : 'blue'"
+                ></v-switch>
+              </v-col>
+              <v-col cols="auto" class="justify-end align-center d-flex">
+                <v-tooltip top v-if="includeGeo && formData.geoData">
+                  <template v-slot:activator="{ on }">
+                    <v-btn icon small class="mr-3" color="blue">
+                      <v-icon small v-on="on">gps_fixed</v-icon>
+                    </v-btn>
+                  </template>
+                  <span
+                    >{{ formData.geoData.latitude }}°,<br />
+                    {{ formData.geoData.longitude }}°</span
+                  >
+                </v-tooltip>
                 <v-btn
                   :color="darkMode ? 'teal' : 'red'"
                   :dark="!!formData.action"
@@ -65,8 +87,11 @@ export default {
   data: () => ({
     open: null,
     submitLoading: false,
+    checkingGeo: false,
+    includeGeo: false,
     formData: {
       action: undefined,
+      geoData: null,
       message: ""
     }
   }),
@@ -82,6 +107,30 @@ export default {
     }
   },
   methods: {
+    checkGeolocation() {
+      if (!this.includeGeo) return;
+
+      this.checkingGeo = true;
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          position => {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+
+            this.formData.geoData = { latitude, longitude };
+            this.checkingGeo = false;
+          },
+          err => {
+            console.error("Error while checking geolocation: " + err.message);
+            this.checkingGeo = false;
+            this.includeGeo = false;
+          }
+        );
+      } else {
+        this.checkingGeo = false;
+        this.includeGeo = false;
+      }
+    },
     createPulse() {
       if (this.submitLoading) return;
 
@@ -89,7 +138,11 @@ export default {
       this.$store
         .dispatch("createPulse", {
           action: this.formData.action.id,
-          message: this.formData.message || ""
+          message: this.formData.message || "",
+          geoData:
+            this.includeGeo && this.formData.geoData
+              ? this.formData.geoData
+              : null
         })
         .then(() => {
           this.submitLoading = false;

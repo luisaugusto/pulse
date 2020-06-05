@@ -28,13 +28,13 @@
         </v-card>
       </v-dialog>
     </v-content>
-    <PulseDrawer v-if="!insufficientPerms"></PulseDrawer>
+    <PulseCreateDrawer v-if="!insufficientPerms"></PulseCreateDrawer>
   </v-app>
 </template>
 
 <script>
 import PulseList from "./components/PulseList";
-import PulseDrawer from "./components/PulseDrawer";
+import PulseCreateDrawer from "./components/PulseCreateDrawer";
 import HeaderSidebar from "./components/HeaderSidebar";
 import { firebaseApp } from "./firebase";
 import { auth } from "firebase/app";
@@ -44,7 +44,7 @@ import { mapState } from "vuex";
 export default {
   components: {
     PulseList,
-    PulseDrawer,
+    PulseCreateDrawer,
     HeaderSidebar
   },
   data: () => ({

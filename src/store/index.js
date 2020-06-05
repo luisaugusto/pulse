@@ -15,7 +15,12 @@ export default new Vuex.Store({
     },
     actions: [],
     pulses: [],
-    insufficientPerms: true
+    insufficientPerms: true,
+    activePulse: null,
+    drawers: {
+      pulseOptions: false,
+      pulseMap: false
+    }
   },
   mutations: {
     ...vuexfireMutations,
@@ -29,6 +34,12 @@ export default new Vuex.Store({
     },
     changePerms(state, val) {
       state.insufficientPerms = val;
+    },
+    setDrawer(state, { drawer, open }) {
+      state.drawers[drawer] = open;
+    },
+    setActivePulse(state, pulse) {
+      state.activePulse = pulse;
     }
   },
   actions: {
@@ -59,7 +70,13 @@ export default new Vuex.Store({
         action: db.collection("actions").doc(data.action),
         message: data.message,
         time: new Date(),
-        reactions: []
+        reactions: [],
+        geoData: data.geoData
+          ? new firestore.GeoPoint(
+              data.geoData.latitude,
+              data.geoData.longitude
+            )
+          : false
       };
 
       return db
@@ -116,6 +133,12 @@ export default new Vuex.Store({
         .doc(pulse)
         .delete()
         .catch(err => console.log("Error while deleting pulse: " + err));
-    })
+    }),
+    setDrawer({ commit }, data) {
+      commit("setDrawer", data);
+    },
+    setActivePulse({ commit }, pulse) {
+      commit("setActivePulse", pulse);
+    }
   }
 });
