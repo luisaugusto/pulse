@@ -24,6 +24,14 @@
               <div @click.stop="openPulseOptions(pulse)">
                 <Pulse :data="pulse" :clickable="clickable(pulse)"></Pulse>
               </div>
+              <div @click.stop="openMapDrawer">
+                <PulseMap
+                  v-if="pulse.geoData"
+                  :id="pulse.id"
+                  :coords="pulse.geoData"
+                  class="mb-3"
+                ></PulseMap>
+              </div>
             </div>
           </v-list>
         </v-col>
@@ -45,6 +53,7 @@
 <script>
 import timeFormatting from "../modules/timeFormatting";
 import Pulse from "./Pulse";
+import PulseMap from "./PulseMap";
 import PulseOptionsDrawer from "./PulseOptionsDrawer";
 import PulseMapDrawer from "./PulseMapDrawer";
 import { mapState } from "vuex";
@@ -54,7 +63,8 @@ export default {
   components: {
     Pulse,
     PulseOptionsDrawer,
-    PulseMapDrawer
+    PulseMapDrawer,
+    PulseMap
   },
   data: () => ({
     mapDrawerOpen: false

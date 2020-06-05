@@ -1,9 +1,6 @@
 <template>
   <v-list-item v-if="data" :link="clickable">
-    <v-list-item-avatar
-      class="align-self-start"
-      :class="data.geoData ? 'mt-3' : 'mt-4'"
-    >
+    <v-list-item-avatar>
       <v-img :src="data.author.image"></v-img>
     </v-list-item-avatar>
 
@@ -12,13 +9,6 @@
       <v-list-item-subtitle v-if="data.action.name"
         >is {{ data.action.name }} {{ data.message }}</v-list-item-subtitle
       >
-      <div @click.stop="openMapDrawer">
-        <PulseMap
-          v-if="data.geoData"
-          :id="data.id"
-          :coords="data.geoData"
-        ></PulseMap>
-      </div>
     </v-list-item-content>
 
     <v-list-item-action class="align-self-start align-center">
@@ -42,13 +32,9 @@
 
 <script>
 import timeFormatting from "../modules/timeFormatting";
-import PulseMap from "./PulseMap";
 
 export default {
   mixins: [timeFormatting],
-  components: {
-    PulseMap
-  },
   props: {
     data: {
       type: Object,
