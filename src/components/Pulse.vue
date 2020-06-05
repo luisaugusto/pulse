@@ -1,6 +1,6 @@
 <template>
-  <v-list-item v-if="data" :link="clickable">
-    <v-list-item-avatar>
+  <v-list-item v-if="data" :link="clickable" three-line class="align-center">
+    <v-list-item-avatar class="align-self-center">
       <v-img :src="data.author.image"></v-img>
     </v-list-item-avatar>
 
