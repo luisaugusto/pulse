@@ -17,7 +17,7 @@
         persistent
         width="300"
       >
-        <v-card color="primary" dark>
+        <v-card :color="darkMode ? 'teal' : 'primary'" dark>
           <v-card-text class="pt-5">
             <v-progress-linear
               indeterminate
@@ -79,6 +79,9 @@ export default {
     dispatchUser(user) {
       this.checkingLoginStatus = false;
       this.$store.dispatch("logIn", user);
+    },
+    darkMode() {
+      return this.$vuetify.theme.dark;
     }
   },
   mounted() {

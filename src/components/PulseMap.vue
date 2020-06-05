@@ -1,5 +1,10 @@
 <template>
-  <div :id="mapId" class="mt-3 map" ref="map" :class="{ interactive }"></div>
+  <div
+    :id="mapId"
+    class="map"
+    ref="map"
+    :class="{ interactive, 'mt-3': !interactive }"
+  ></div>
 </template>
 
 <script>
@@ -107,7 +112,6 @@ export default {
 
   &.interactive {
     height: 100%;
-    margin-top: 0 !important;
   }
 }
 </style>

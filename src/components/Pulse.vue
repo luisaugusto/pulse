@@ -78,13 +78,6 @@ export default {
         pulse: this.data.id,
         hasReaction: this.hasReaction
       });
-    },
-    openMapDrawer() {
-      this.$store.dispatch("setDrawer", {
-        drawer: "pulseMap",
-        open: true
-      });
-      this.$store.dispatch("setActivePulse", this.data);
     }
   }
 };

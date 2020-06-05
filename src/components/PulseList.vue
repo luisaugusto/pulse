@@ -24,7 +24,7 @@
               <div @click.stop="openPulseOptions(pulse)">
                 <Pulse :data="pulse" :clickable="clickable(pulse)"></Pulse>
               </div>
-              <div @click.stop="openMapDrawer">
+              <div @click.stop="openMapDrawer(pulse)">
                 <PulseMap
                   v-if="pulse.geoData"
                   :id="pulse.id"
@@ -104,6 +104,13 @@ export default {
       this.$store.dispatch("setDrawer", {
         drawer: "pulseOptions",
         open: this.clickable(pulse)
+      });
+      this.$store.dispatch("setActivePulse", pulse);
+    },
+    openMapDrawer(pulse) {
+      this.$store.dispatch("setDrawer", {
+        drawer: "pulseMap",
+        open: true
       });
       this.$store.dispatch("setActivePulse", pulse);
     }
