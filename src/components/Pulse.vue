@@ -4,7 +4,7 @@
       <v-img :src="data.author.image"></v-img>
     </v-list-item-avatar>
 
-    <v-list-item-content>
+    <v-list-item-content class="align-start">
       <v-list-item-title>{{ data.author.name }}</v-list-item-title>
       <v-list-item-subtitle v-if="data.action.name"
         >is {{ data.action.name }} {{ data.message }}</v-list-item-subtitle
