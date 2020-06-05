@@ -106,6 +106,15 @@ export default {
       return this.$store.state.user;
     }
   },
+  watch: {
+    open() {
+      if (!this.open) {
+        this.includeGeo = false;
+        this.formData.message = "";
+        this.formData.action = undefined;
+      }
+    }
+  },
   methods: {
     checkGeolocation() {
       if (!this.includeGeo) return;
