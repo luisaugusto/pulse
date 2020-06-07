@@ -105,6 +105,7 @@ export default new Vuex.Store({
         {
           serialize: snapshot => ({
             name: snapshot.data().name,
+            disabled: snapshot.data().disabled,
             id: snapshot.id
           })
         }

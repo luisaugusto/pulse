@@ -21,7 +21,7 @@
                 <v-autocomplete
                   :color="darkMode ? 'teal' : 'blue'"
                   append-icon="arrow_drop_down"
-                  :items="actions"
+                  :items="actions.filter(action => !action.disabled)"
                   item-text="name"
                   item-value="id"
                   label="What are you up to?"
