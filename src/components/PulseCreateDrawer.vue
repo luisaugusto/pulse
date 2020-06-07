@@ -70,7 +70,7 @@
                   :dark="!!formData.action"
                   :loading="submitLoading"
                   @click="createPulse"
-                  :disabled="!formData.action"
+                  :disabled="!formData.action || checkingGeo"
                   >Send Pulse <v-icon right>send</v-icon></v-btn
                 >
               </v-col>
@@ -83,6 +83,8 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   data: () => ({
     open: null,
@@ -99,46 +101,45 @@ export default {
     darkMode() {
       return this.$vuetify.theme.dark;
     },
-    actions() {
-      return this.$store.state.actions;
-    },
-    user() {
-      return this.$store.state.user;
-    }
+    ...mapState(["actions", "user"])
   },
   watch: {
     open() {
-      if (!this.open) {
-        this.includeGeo = false;
-        this.formData.message = "";
-        this.formData.action = undefined;
-      }
+      if (!this.open) this.resetForm();
     }
   },
   methods: {
+    removeGeoData() {
+      this.includeGeo = false;
+      this.checkingGeo = false;
+      this.formData.geoData = null;
+    },
+    resetForm() {
+      this.removeGeoData();
+
+      this.$refs.form.reset();
+      this.submitLoading = false;
+    },
     checkGeolocation() {
-      if (!this.includeGeo) return;
+      if (!this.includeGeo || !navigator.geolocation) {
+        this.removeGeoData();
+        return;
+      }
 
       this.checkingGeo = true;
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          position => {
-            const latitude = position.coords.latitude;
-            const longitude = position.coords.longitude;
+      navigator.geolocation.getCurrentPosition(
+        position => {
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
 
-            this.formData.geoData = { latitude, longitude };
-            this.checkingGeo = false;
-          },
-          err => {
-            console.error("Error while checking geolocation: " + err.message);
-            this.checkingGeo = false;
-            this.includeGeo = false;
-          }
-        );
-      } else {
-        this.checkingGeo = false;
-        this.includeGeo = false;
-      }
+          this.formData.geoData = { latitude, longitude };
+          this.checkingGeo = false;
+        },
+        err => {
+          console.error("Error while checking geolocation: " + err.message);
+          this.removeGeoData();
+        }
+      );
     },
     createPulse() {
       if (this.submitLoading) return;
@@ -154,9 +155,8 @@ export default {
               : null
         })
         .then(() => {
-          this.submitLoading = false;
           this.open = null;
-          this.$refs.form.reset();
+          this.resetForm();
         });
     }
   }
