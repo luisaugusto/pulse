@@ -13,11 +13,11 @@
 
 Pulse is a PWA that can be used to send brief status messages between other users.
 
-![](screenshots/screenshot_1.png)
+![](screenshots/screenshot_home.png)
 
 I built this as a tool for my wife and I so that we could send each other pings to stay updated while we are not together. Creating a pulse is as simple as clicking the plus button at the bottom.
 
-![](screenshots/screenshot_2.png)
+![](screenshots/screenshot_add.png)
 
 I also used this as an opportunity to learn how to connect Firebase to a Vue application as well as to understand and utilize progressive web app features.
 
