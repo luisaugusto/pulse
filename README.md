@@ -26,8 +26,8 @@ I also used this as an opportunity to learn how to connect Firebase to a Vue app
 - 🌙 Dark Mode
 - 📍 [Geolocation API](https://developer.mozilla.org/en-US/docs/Web/API/Geolocation_API) and [Mapbox](https://www.mapbox.com/) Rendering
 - 🔥 [Firebase Authentication](https://firebase.google.com/products/auth/) and [Firestore Database Integration](https://cloud.google.com/firestore/)
-- ❗️ **Push Notifications (Coming Soon)**
-- 👨‍👩‍👧‍👦 **Add and share pulses with friends (Coming Soon)**
+- ❗️ *Push Notifications (Coming Soon)*
+- 👨‍👩‍👧‍👦 *Add and share pulses with friends (Coming Soon)*
 
 ## Built With Vue
 
