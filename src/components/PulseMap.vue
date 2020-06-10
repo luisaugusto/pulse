@@ -72,7 +72,7 @@ export default {
 
       setTimeout(() => {
         mapboxgl.accessToken =
-          "pk.eyJ1IjoibHVpc2F1Z3VzdG8iLCJhIjoiY2sycGUweXkxMDNjeTNubXczYWJjbzM3YiJ9.gkhBx6ciBpaqD-bdtvmDBQ";
+          "pk.eyJ1IjoibHVpc2F1Z3VzdG8iLCJhIjoiY2tiOHNvZ3V2MDFmaTJ3bW5pNGdmcGVpayJ9.QYZWzTlMuR8gXw1kLE1sLA";
         this.map = new mapboxgl.Map({
           container: this.mapId,
           center: lngLat,
