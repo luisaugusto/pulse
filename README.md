@@ -31,7 +31,7 @@ I also used this as an opportunity to learn how to connect Firebase to a Vue app
 
 ## Built With Vue
 
-- [Vue Cli](https://cli.vuejs.org/)
+- [Vue CLI](https://cli.vuejs.org/)
 - [VuexFire](https://vuefire.vuejs.org/vuexfire/)
 - [Vuetify](https://vuetifyjs.com/en/)
 
