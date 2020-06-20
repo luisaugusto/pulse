@@ -87,7 +87,10 @@ export default new Vuex.Store({
     bindPulses: firestoreAction(({ commit, bindFirestoreRef }) => {
       return bindFirestoreRef(
         "pulses",
-        db.collection("pulses").orderBy("time", "desc"),
+        db
+          .collection("pulses")
+          .orderBy("time", "desc")
+          .limit(20),
         {
           serialize: snapshot => ({
             ...snapshot.data(),

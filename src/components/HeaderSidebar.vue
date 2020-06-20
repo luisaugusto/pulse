@@ -64,7 +64,7 @@
             <v-spacer></v-spacer>
             <v-list-item-content>
               <v-list-item-title class="text-right">
-                <code>v1.2.6</code>
+                <code>v1.2.7</code>
               </v-list-item-title>
             </v-list-item-content>
           </v-list-item>
