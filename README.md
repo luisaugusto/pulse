@@ -6,7 +6,7 @@
 
 ###### Please consider supporting my work and other projects:
 
-[![Plant a Tree](https://img.shields.io/badge/Plant%20a%20Tree-%F0%9F%8C%B3-green)](https://offset.earth/luisaugusto)
+[![Plant a Tree](https://img.shields.io/badge/Plant%20a%20Tree-%F0%9F%8C%B3-green)](https://ecologi.com/luisaugusto)
 [![Buy Me a Boba Tea](https://img.shields.io/badge/Buy%20Me%20a%20Boba%20Tea-🥤-yellow)](https://www.buymeacoffee.com/luiscodes)
 
 # Pulse
