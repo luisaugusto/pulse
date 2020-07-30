@@ -1,6 +1,6 @@
 [![Netlify Status](https://api.netlify.com/api/v1/badges/58958509-2b96-49a1-b4df-3cc901e095fd/deploy-status)](https://app.netlify.com/sites/luis-pulse/deploys)
 
-![GitHub package.json version](https://img.shields.io/github/package-json/v/luisaugusto/pulse)
+![GitHub package.json version](https://img.shields.io/github/package-json/v/luisaugusto/pulse/main)
 ![GitHub repo size](https://img.shields.io/github/repo-size/luisaugusto/pulse)
 ![GitHub](https://img.shields.io/github/license/luisaugusto/pulse) 
 
